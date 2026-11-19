@@ -6,7 +6,7 @@ app = Flask(__name__)
 def home():
     return """
     <h1>Docker + Jenkins Automation Project</h1>
-    <h2>Deployment Successful!</h2>
+    <h2>Automatic CI/CD Deployment Successful!</h2>
     <p>This application is deployed using Docker and Jenkins.</p>
     """
 
