@@ -1,5 +1,7 @@
 pipeline {
-    agent { label 'docker-agent' }
+    agent {
+        label 'docker-agent'
+    }
 
     stages {
         stage('Checkout') {
@@ -12,7 +14,6 @@ pipeline {
             steps {
                 sh '''
                     echo "Checking project files..."
-                    ls -la
                     test -f app.py
                     test -f Dockerfile
                     test -f requirements.txt
@@ -20,11 +21,21 @@ pipeline {
                 '''
             }
         }
+
+        stage('Docker Build') {
+            steps {
+                sh '''
+                    echo "Building Docker image..."
+                    docker build -t hotel-demo-app:latest .
+                    echo "Docker image built successfully!"
+                '''
+            }
+        }
     }
 
     post {
         success {
-            echo 'GitHub checkout successful!'
+            echo 'Jenkins pipeline completed successfully!'
         }
         failure {
             echo 'Pipeline failed. Check console output.'
