@@ -31,27 +31,30 @@ pipeline {
                 '''
             }
         }
+
+        stage('Docker Deploy') {
+            steps {
+                sh '''
+                    echo "Deploying Flask application..."
+
+                    docker rm -f hotel-demo 2>/dev/null || true
+
+                    docker run -d \
+                      --name hotel-demo \
+                      --restart unless-stopped \
+                      -p 127.0.0.1:8081:5000 \
+                      hotel-demo-app:latest
+
+                    echo "Checking deployment..."
+                    docker ps --filter name=hotel-demo
+
+                    echo "Deployment completed!"
+                '''
+            }
+        }
     }
 
-   stage('Docker Deploy') {
-    steps {
-        sh '''
-            echo "Deploying Flask application..."
-
-            docker stop hotel-demo || true
-            docker rm hotel-demo || true
-
-            docker run -d \
-              --name hotel-demo \
-              --restart unless-stopped \
-              -p 127.0.0.1:8081:5000 \
-              hotel-demo-app:latest
-
-            echo "Deployment completed!"
-        '''
-    }
-}
- post {
+    post {
         success {
             echo 'Jenkins pipeline completed successfully!'
         }
